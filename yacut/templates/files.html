@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="{{ url_for('static', filename='img/fav/fav.ico') }}" type="image">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <title>YaCut - загрузка файлов</title>
+</head>
+<body>
+  <header class="pb-2">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('index_view') }}">Главная</a></li>
+            <li class="nav-item"><a class="nav-link active" href="{{ url_for('files_view') }}">Загрузка файлов</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container mt-5 pt-3">
+    <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
+    <p class="text-center">Загрузите файлы на Яндекс.Диск и получите короткие ссылки</p>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form method="POST" enctype="multipart/form-data">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            <label for="files" class="form-label fw-bold">Выберите файлы</label>
+            {{ form.files(class="form-control", multiple=True, id="files") }}
+            {% if form.files.errors %}
+              <div class="text-danger small">{{ form.files.errors[0] }}</div>
+            {% endif %}
+          </div>
+          {{ form.submit(class="btn btn-primary btn-lg w-100", value="Загрузить") }}
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category if category != 'message' else 'info' }} mt-3">{{ message|safe }}</div>
+          {% endfor %}
+        {% endwith %}
+
+        {% if results %}
+          <h4 class="text-center mt-4">Загруженные файлы</h4>
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr><th>Имя файла</th><th>Короткая ссылка</th></tr>
+            </thead>
+            <tbody>
+              {% for item in results %}
+              <tr>
+                <td>{{ item.filename }}</td>
+                <td><a href="{{ item.short_url }}" target="_blank">{{ item.short_url }}</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center py-2 border-top mt-4">
+    <small>Укоротитель ссылок YaCut</small>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

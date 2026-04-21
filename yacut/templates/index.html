@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="{{ url_for('static', filename='img/fav/fav.ico') }}" type="image">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <title>YaCut - укоротитель ссылок</title>
+</head>
+<body>
+  <header class="pb-2">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link active" href="{{ url_for('index_view') }}">Главная</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('files_view') }}">Загрузка файлов</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="container mt-5 pt-3">
+    <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
+    <p class="text-center">Создайте короткую ссылку автоматически или предложите свой вариант</p>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.original_link(class="form-control form-control-lg", placeholder="Длинная ссылка") }}
+            {% if form.original_link.errors %}
+              <div class="text-danger small">{{ form.original_link.errors[0] }}</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ form.custom_id(class="form-control form-control-lg", placeholder="Ваш вариант короткой ссылки") }}
+            {% if form.custom_id.errors %}
+              <div class="text-danger small">{{ form.custom_id.errors[0] }}</div>
+            {% endif %}
+          </div>
+          {{ form.submit(class="btn btn-primary btn-lg w-100", value="Создать") }}
+        </form>
+        <div class="mt-3 text-center">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category if category != 'message' else 'info' }}">{{ message|safe }}</div>
+            {% endfor %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="text-center py-2 border-top mt-4">
+    <small>Укоротитель ссылок YaCut</small>
+  </footer>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
