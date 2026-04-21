@@ -1,8 +1,7 @@
 # YaCut — сервис укорачивания ссылок
 
 [![Python](https://img.shields.io/badge/Python-3.7%2B-blue)](https://python.org)
-[![Flask](https://img.shields.io/badge/Flask-2.3.3-lightgrey)](https://flask.palletsprojects.com/)
-[![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-ORM-red)](https://www.sqlalchemy.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0.2-lightgrey)](https://flask.palletsprojects.com/)
 
 YaCut — это веб-сервис для сокращения длинных URL-адресов.  
 Пользователь может предложить собственный короткий идентификатор или получить автоматически сгенерированный.  
