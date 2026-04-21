@@ -1,5 +1,5 @@
 from flask import request, jsonify
-import validators
+from urllib.parse import urlparse
 
 from yacut import app, db
 from yacut.models import URLMap
@@ -19,7 +19,8 @@ def create_short_link():
 
     if not url:
         raise InvalidAPIUsage('"url" является обязательным полем!')
-    if not validators.url(url):
+    parsed = urlparse(url)
+    if not (parsed.scheme and parsed.netloc):
         raise InvalidAPIUsage('Указан недопустимый URL')
 
     if custom_id:
