@@ -1,11 +1,11 @@
 import aiohttp
 import requests
-from flask import (abort, flash, redirect, render_template, request,
-                   url_for, current_app)
+from flask import (abort, current_app, flash, redirect, render_template,
+                   request, url_for)
 from markupsafe import Markup
 
 from yacut import app, db
-from yacut.forms import URLForm, UploadFilesForm
+from yacut.forms import UploadFilesForm, URLForm
 from yacut.models import URLMap
 from yacut.utils import get_unique_short_id
 

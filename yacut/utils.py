@@ -1,7 +1,9 @@
-import random
-import aiohttp
 import asyncio
+import random
+
+import aiohttp
 from flask import current_app
+
 from yacut.models import URLMap
 
 

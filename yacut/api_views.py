@@ -1,11 +1,12 @@
-from flask import request, jsonify
 from urllib.parse import urlparse
 
+from flask import jsonify, request
+
 from yacut import app, db
-from yacut.models import URLMap
-from yacut.utils import get_unique_short_id
 from yacut.error_handlers import InvalidAPIUsage
+from yacut.models import URLMap
 from yacut.settings import Config
+from yacut.utils import get_unique_short_id
 
 
 @app.route('/api/id/', methods=['POST'])
