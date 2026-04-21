@@ -129,3 +129,7 @@ yacut/
     ```bash
     flask run
     ```
+
+## 👨‍💻 Автор
+Daria Barashkina
+GitHub: @DariaBarashkina
