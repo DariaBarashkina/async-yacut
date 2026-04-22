@@ -14,7 +14,6 @@ yacut/
 ├── run.py                         # точка входа в приложение
 ├── requirements.txt               # зависимости проекта
 ├── .env.example                   # шаблон переменных окружения
-├── .flaskenv                      # переменные окружения Flask
 ├── pytest.ini                     # конфигурация pytest
 ├── openapi.yml                    # спецификация API (OpenAPI 3.0)
 ├── yacut/                         # основной пакет приложения
