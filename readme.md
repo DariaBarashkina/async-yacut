@@ -78,7 +78,8 @@ yacut/
 Пример заполненного .env можно посмотреть в файле .env.example.
 
 ### Файл .env должен содержать следующие ключи:
-- Переменная -> Описание (пример значения)
+Переменная -> Описание (пример значения)
+
 - FLASK_APP -> Точка входа Flask (run.py)
 - FLASK_ENV -> Режим работы (development / production)
 - SECRET_KEY -> Секретный ключ Flask (your-very-secret-key)
