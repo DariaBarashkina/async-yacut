@@ -1,24 +1,21 @@
 import string
 
-
-import string
-
 # Длины полей
 SHORT_LENGTH = 6
 MAX_SHORT_LENGTH = 16
 MAX_URL_LENGTH = 2048
 MAX_GENERATION_ATTEMPTS = 10
 
-# Допустимые символы
-ALLOWED_CHARS = string.ascii_letters + string.digits
-REGEX_PATTERN = f'^[{ALLOWED_CHARS}]*$'
+# Допустимые символы для короткой ссылки
+SHORT_ALLOWED_CHARS = string.ascii_letters + string.digits
+SHORT_REGEX_PATTERN = f'^[{SHORT_ALLOWED_CHARS}]+$'
 
 # Зарезервированные имена
 RESERVED_SHORTS = {'files'}
 
-# URL API Яндекс.Диска
-YANDEX_UPLOAD_URL = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
-YANDEX_DOWNLOAD_URL = 'https://cloud-api.yandex.net/v1/disk/resources/download'
+# Пути API Яндекс.Диска (база уходит в config)
+YANDEX_UPLOAD_PATH = '/disk/resources/upload'
+YANDEX_DOWNLOAD_PATH = '/disk/resources/download'
 
 # Имя эндпоинта для редиректа
 REDIRECT_FOR_SHORT = 'redirect_view'
@@ -37,7 +34,21 @@ INTERNAL_ERROR = 'Внутренняя ошибка сервера'
 REQUIRED_FIELD = 'Обязательное поле'
 INVALID_URL_FORM = 'Некорректный URL'
 ONLY_LATIN_AND_DIGITS = 'Только латинские буквы и цифры'
-SHORT_MAX_LENGTH = f'Не более {MAX_SHORT_LENGTH} символов'
+
+
+def pluralize_symbols(n):
+    if 11 <= n % 100 <= 14:
+        return 'символов'
+    if n % 10 == 1:
+        return 'символ'
+    if 2 <= n % 10 <= 4:
+        return 'символа'
+    return 'символов'
+
+
+SHORT_MAX_LENGTH_ERROR = (
+    f'Не более {MAX_SHORT_LENGTH} {pluralize_symbols(MAX_SHORT_LENGTH)}'
+)
 
 # Сообщения для загрузки файлов
 CHOOSE_FILES = 'Выберите хотя бы один файл'

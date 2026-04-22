@@ -1,10 +1,16 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, URLField
-from wtforms.validators import DataRequired, Length, Optional, ValidationError
 from flask_wtf.file import MultipleFileField
+from wtforms import StringField, SubmitField, URLField
+from wtforms.validators import (
+    DataRequired,
+    Length,
+    Optional,
+    ValidationError,
+    Regexp
+)
 
 from yacut.constants import (
-    ALLOWED_CHARS,
+    SHORT_REGEX_PATTERN,
     BTN_CREATE,
     BTN_UPLOAD,
     CHOOSE_FILES,
@@ -37,25 +43,24 @@ class URLMapForm(FlaskForm):
         validators=[
             Optional(),
             Length(max=MAX_SHORT_LENGTH),
+            Regexp(SHORT_REGEX_PATTERN, message=ONLY_LATIN_AND_DIGITS)
         ]
     )
 
     submit = SubmitField(BTN_CREATE)
 
     def validate_custom_id(self, field):
-        """Валидация пользовательского короткого идентификатора."""
+        """
+        Проверяет, что пользовательский short_id:
+        - не зарезервирован
+        - не занят в базе
+        """
         if not field.data:
             return
 
         short = field.data
 
-        if short in RESERVED_SHORTS:
-            raise ValidationError(SHORT_EXISTS)
-
-        if not all(c in ALLOWED_CHARS for c in short):
-            raise ValidationError(ONLY_LATIN_AND_DIGITS)
-
-        if URLMap.get(short):
+        if short in RESERVED_SHORTS or URLMap.get(short):
             raise ValidationError(SHORT_EXISTS)
 
 
