@@ -76,16 +76,15 @@ yacut/
 
 ### Переменные окружения
 
-```text
 Файл .env должен содержать следующие ключи:
-    Переменная	    Описание	                                            Пример значения
-    FLASK_APP	    Точка входа Flask	                                    run.py
-    FLASK_ENV	    Режим работы (development / production)	                development
-    SECRET_KEY	    Секретный ключ Flask (используется для сессий и CSRF)	your-very-secret-key
-    DATABASE_URI    URI подключения к базе данных (SQLite по умолчанию)	    sqlite:///db.sqlite3
-    DISK_TOKEN	    OAuth-токен Яндекс.Диска                          	    y0_AgAAAA...
+Переменная -> Описание (пример значения)
+- FLASK_APP -> Точка входа Flask (run.py)
+- FLASK_ENV -> Режим работы (development / production)
+- SECRET_KEY -> Секретный ключ Flask (your-very-secret-key)
+- DATABASE_URI -> URI подключения к базе данных, SQLite по умолчанию (sqlite:///db.sqlite3)
+- DISK_TOKEN -> OAuth-токен Яндекс.Диска (y0_AgAAAA...)
 Пример заполненного .env можно посмотреть в файле .env.example.
-```
+
 
 ### Локальная разработка
 
