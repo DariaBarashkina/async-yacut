@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
+<p class="text-center">Загрузите файлы на Яндекс.Диск и получите короткие ссылки</p>
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <form method="POST" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        <label for="files" class="form-label fw-bold">Выберите файлы</label>
+        {{ form.files(class="form-control", multiple=True, id="files") }}
+        {% for error in form.files.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+      {{ form.submit(class="btn btn-primary btn-lg w-100", value="Загрузить") }}
+    </form>
+
+    {% if short_for_download %}
+      <h4 class="text-center mt-4">Загруженные файлы</h4>
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>Имя файла</th>
+            <th>Короткая ссылка</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in short_for_download %}
+            <tr>
+              <td>{{ item.filename }}</td>
+              <td><a href="{{ item.short }}" target="_blank">{{ item.short }}</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

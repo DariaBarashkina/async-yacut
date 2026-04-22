@@ -9,29 +9,32 @@ YaCut — это веб-сервис для сокращения длинных 
 
 ## 📁 Структура проекта
 ```text
+```text
 yacut/
-├── run.py                     # точка входа
-├── requirements.txt           # зависимости
-├── .env.example               # шаблон переменных окружения
-├── pytest.ini                 # конфигурация pytest
-├── openapi.yml                # спецификация API
-├── yacut/                     # пакет приложения
-│   ├── __init__.py
-│   ├── settings.py            # конфигурация
-│   ├── models.py              # модель URLMap
-│   ├── forms.py               # формы Flask-WTF
-│   ├── utils.py               # вспомогательные функции
-│   ├── views.py               # обработчики страниц
-│   ├── api_views.py           # обработчики API
-│   ├── error_handlers.py      # кастомные обработчики ошибок
-│   ├── templates/             # Jinja2-шаблоны
-│   │   ├── index.html
-│   │   ├── files.html
-│   │   ├── base.html
-│   │   ├── 404.html
-│   │   └── 500.html
-│   └── static/                # статические файлы (CSS, JS, изображения)
-└── tests/                     # тесты
+├── run.py                         # точка входа в приложение
+├── requirements.txt               # зависимости проекта
+├── .env.example                   # шаблон переменных окружения
+├── .flaskenv                      # переменные окружения Flask
+├── pytest.ini                     # конфигурация pytest
+├── openapi.yml                    # спецификация API (OpenAPI 3.0)
+├── yacut/                         # основной пакет приложения
+│   ├── __init__.py                # инициализация Flask, БД и миграций
+│   ├── settings.py                # настройки приложения (Config)
+│   ├── constants.py               # константы проекта
+│   ├── models.py                  # модель URLMap (микро-ORM)
+│   ├── forms.py                   # формы Flask-WTF
+│   ├── views.py                   # обработчики веб-страниц
+│   ├── api_views.py               # обработчики API
+│   ├── error_handlers.py          # обработчики ошибок (404, 500, InvalidAPIUsage)
+│   ├── disk.py                    # асинхронная работа с Яндекс.Диском
+│   ├── templates/                 # Jinja2-шаблоны
+│   │   ├── base.html              # базовый шаблон
+│   │   ├── index.html             # главная страница (создание короткой ссылки)
+│   │   ├── download_files.html    # страница загрузки файлов
+│   │   ├── 404.html               # страница ошибки 404
+│   │   └── 500.html               # страница ошибки 500
+│   └── static/                    # статические файлы
+└── tests/                         # тесты pytest
 ```
 
 ## ✨ Возможности

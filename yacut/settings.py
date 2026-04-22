@@ -1,5 +1,12 @@
 import os
 
+from yacut.constants import (
+    ALLOWED_CHARS,
+    MAX_SHORT_LENGTH,
+    MAX_URL_LENGTH,
+    SHORT_LENGTH,
+)
+
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
@@ -9,8 +16,7 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DISK_TOKEN = os.environ.get('DISK_TOKEN')
-    SHORT_ID_LENGTH = 6
-    MAX_CUSTOM_ID_LENGTH = 16
-    ALLOWED_CHARS = (
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    )
+    SHORT_LENGTH = SHORT_LENGTH
+    MAX_SHORT_LENGTH = MAX_SHORT_LENGTH
+    MAX_URL_LENGTH = MAX_URL_LENGTH
+    ALLOWED_CHARS = ALLOWED_CHARS

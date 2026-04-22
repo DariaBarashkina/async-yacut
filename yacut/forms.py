@@ -1,59 +1,72 @@
 from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, URLField
+from wtforms.validators import DataRequired, Length, Optional, ValidationError
 from flask_wtf.file import MultipleFileField
-from wtforms import StringField, SubmitField
-from wtforms.validators import (DataRequired, Length, Optional, Regexp,
-                                ValidationError)
 
+from yacut.constants import (
+    ALLOWED_CHARS,
+    BTN_CREATE,
+    BTN_UPLOAD,
+    CHOOSE_FILES,
+    LABEL_CHOOSE_FILES,
+    LABEL_LONG_LINK,
+    LABEL_SHORT_LINK,
+    MAX_SHORT_LENGTH,
+    MAX_URL_LENGTH,
+    ONLY_LATIN_AND_DIGITS,
+    REQUIRED_FIELD,
+    RESERVED_SHORTS,
+    SHORT_EXISTS,
+)
 from yacut.models import URLMap
-from yacut.settings import Config
 
 
-class URLForm(FlaskForm):
-    original_link = StringField(
-        'Длинная ссылка',
+class URLMapForm(FlaskForm):
+    """Форма для создания короткой ссылки."""
+
+    original_link = URLField(
+        LABEL_LONG_LINK,
         validators=[
-            DataRequired(message='Обязательное поле'),
-            Length(max=2048)
+            DataRequired(message=REQUIRED_FIELD),
+            Length(max=MAX_URL_LENGTH)
         ]
     )
+
     custom_id = StringField(
-        'Ваш вариант короткой ссылки',
+        LABEL_SHORT_LINK,
         validators=[
             Optional(),
-            Length(
-                max=Config.MAX_CUSTOM_ID_LENGTH,
-                message='Не более 16 символов'
-            ),
-            Regexp(
-                r'^[A-Za-z0-9]*$',
-                message='Только латинские буквы и цифры'
-            )
+            Length(max=MAX_SHORT_LENGTH),
         ]
     )
-    submit = SubmitField('Создать')
 
-    def validate_original_link(self, field):
-        if not (
-            field.data.startswith('http://')
-            or field.data.startswith('https://')
-        ):
-            raise ValidationError('Некорректный URL')
+    submit = SubmitField(BTN_CREATE)
 
     def validate_custom_id(self, field):
-        if field.data:
-            if field.data == 'files':
-                raise ValidationError(
-                    'Предложенный вариант короткой ссылки уже существует.'
-                )
-            if URLMap.query.filter_by(short=field.data).first():
-                raise ValidationError(
-                    'Предложенный вариант короткой ссылки уже существует.'
-                )
+        """Валидация пользовательского короткого идентификатора."""
+        if not field.data:
+            return
+
+        short = field.data
+
+        if short in RESERVED_SHORTS:
+            raise ValidationError(SHORT_EXISTS)
+
+        if not all(c in ALLOWED_CHARS for c in short):
+            raise ValidationError(ONLY_LATIN_AND_DIGITS)
+
+        if URLMap.get(short):
+            raise ValidationError(SHORT_EXISTS)
 
 
-class UploadFilesForm(FlaskForm):
+class UploadForm(FlaskForm):
+    """Форма для загрузки файлов."""
+
     files = MultipleFileField(
-        'Выберите файлы',
-        validators=[DataRequired(message='Выберите хотя бы один файл')]
+        LABEL_CHOOSE_FILES,
+        validators=[
+            DataRequired(message=CHOOSE_FILES)
+        ]
     )
-    submit = SubmitField('Загрузить')
+
+    submit = SubmitField(BTN_UPLOAD)
