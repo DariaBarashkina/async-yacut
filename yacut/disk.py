@@ -14,6 +14,12 @@ from yacut.constants import (
     LOCATION_HEADER_ERROR,
 )
 
+# --- "константы модуля" ---
+UPLOAD_URL = "{base}" + YANDEX_UPLOAD_PATH
+DOWNLOAD_URL = "{base}" + YANDEX_DOWNLOAD_PATH
+AUTH_HEADER = 'Authorization'
+AUTH_HEADER_VALUE = 'OAuth {token}'
+
 
 async def async_upload_files_to_yadisk(files: Optional[List]) -> List[str]:
     """Асинхронно загружает список файлов на Яндекс.Диск."""
@@ -36,29 +42,30 @@ async def upload_file_and_get_url(
     if not token:
         raise ValueError(NO_TOKEN)
 
-    headers = {
-        'Authorization': f'OAuth {token}'
-    }
-
     filename = file.filename
 
-    upload_url = await _get_upload_url(session, headers, filename)
+    headers = {
+        AUTH_HEADER: AUTH_HEADER_VALUE.format(token=token)
+    }
+
+    base = current_app.config['YANDEX_API_BASE']
+
+    upload_url = await _get_upload_url(session, headers, base, filename)
     file_path = await _upload_file_content(session, upload_url, file)
 
-    return await _get_download_url(session, headers, file_path)
+    return await _get_download_url(session, headers, base, file_path)
 
 
 async def _get_upload_url(
     session: aiohttp.ClientSession,
     headers: dict,
+    base: str,
     filename: str
 ) -> str:
     """Получает URL для загрузки файла."""
 
-    base = current_app.config['YANDEX_API_BASE']
-
     async with session.get(
-        f"{base}{YANDEX_UPLOAD_PATH}",
+        UPLOAD_URL.format(base=base),
         headers=headers,
         params={
             'path': f'app:/{filename}',    # noqa: E231
@@ -82,11 +89,7 @@ async def _upload_file_content(
 ) -> str:
     """Загружает файл на Яндекс.Диск."""
 
-    async with session.put(
-        upload_url,
-        data=file.read()
-    ) as response:
-
+    async with session.put(upload_url, data=file.read()) as response:
         response.raise_for_status()
 
         location = (
@@ -103,14 +106,13 @@ async def _upload_file_content(
 async def _get_download_url(
     session: aiohttp.ClientSession,
     headers: dict,
+    base: str,
     file_path: str
 ) -> str:
-    """Получает ссылку на скачивание файла."""
-
-    base = current_app.config['YANDEX_API_BASE']
+    """Получает ссылку для скачивания файла."""
 
     async with session.get(
-        f"{base}{YANDEX_DOWNLOAD_PATH}",
+        DOWNLOAD_URL.format(base=base),
         headers=headers,
         params={
             'path': file_path,

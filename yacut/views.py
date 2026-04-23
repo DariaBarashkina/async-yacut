@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import abort, flash, redirect, render_template
 
-from yacut import app, db
+from yacut import app
 from yacut.constants import (
     REDIRECT_FOR_SHORT,
     ERROR_GENERIC,
@@ -63,22 +63,19 @@ async def files_view():
         return render_template(template, form=form)
 
     try:
-        url_maps = [
-            URLMap.create(original=original_url, commit=False)
-            for original_url in urls
-        ]
-
-        db.session.commit()
-
         short_for_downloads = [
             {
                 'filename': file_obj.filename,
-                'short': url_map.get_short_url()
+                'short': URLMap.create(
+                    original=url,
+                    commit=(i == len(urls) - 1)
+                ).get_short_url()
             }
-            for file_obj, url_map in zip(form.files.data, url_maps)
+            for i, (file_obj, url) in enumerate(
+                zip(form.files.data, urls)
+            )
         ]
     except (ValueError, RuntimeError) as error:
-        db.session.rollback()
         flash(ERROR_UPLOAD.format(field=error))
         return render_template(template, form=form)
 
