@@ -32,17 +32,20 @@ def index_view():
         return render_template('index.html', form=form)
 
     try:
-        return render_template(
-            'index.html',
-            form=form,
-            short=URLMap.create(
-                original=form.original_link.data,
-                short=form.custom_id.data
-            ).get_short_url()
+        url_map = URLMap.create(
+            original=form.original_link.data,
+            short=form.custom_id.data,
+            validate=False
         )
     except (ValueError, RuntimeError) as error:
         flash(ERROR_GENERIC.format(error=error))
         return render_template('index.html', form=form)
+
+    return render_template(
+        'index.html',
+        form=form,
+        short=url_map.get_short_url()
+    )
 
 
 @app.route('/files', methods=('GET', 'POST'))
@@ -60,7 +63,7 @@ async def files_view():
         return render_template(template, form=form)
 
     try:
-        short_for_download = [
+        short_for_downloads = [
             {
                 'filename': file_obj.filename,
                 'short': URLMap.create(original=original_url).get_short_url()
@@ -74,5 +77,5 @@ async def files_view():
     return render_template(
         template,
         form=form,
-        short_for_download=short_for_download
+        short_for_downloads=short_for_downloads
     )

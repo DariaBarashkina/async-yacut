@@ -16,10 +16,9 @@
         {% endfor %}
       </div>
       {{ form.submit(class="btn btn-primary", placeholder=form.submit.label.text) }}
-    </div>
     </form>
 
-    {% if short_for_download %}
+    {% if short_for_downloads %}
       <h4 class="text-center mt-4">Загруженные файлы</h4>
       <table class="table table-bordered">
         <thead class="table-light">
@@ -29,7 +28,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for item in short_for_download %}
+          {% for item in short_for_downloads %}
             <tr>
               <td>{{ item.filename }}</td>
               <td><a href="{{ item.short }}" target="_blank">{{ item.short }}</a></td>

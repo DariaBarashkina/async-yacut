@@ -13,9 +13,12 @@ SHORT_REGEX_PATTERN = f'^[{SHORT_ALLOWED_CHARS}]+$'
 # Зарезервированные имена
 RESERVED_SHORTS = {'files'}
 
-# Пути API Яндекс.Диска (база уходит в config)
+# Яндекс.Диск
 YANDEX_UPLOAD_PATH = '/disk/resources/upload'
 YANDEX_DOWNLOAD_PATH = '/disk/resources/download'
+
+HEADERS_AUTH_KEY = 'Authorization'
+HEADERS_AUTH_VALUE = 'OAuth {token}'
 
 # Имя эндпоинта для редиректа
 REDIRECT_FOR_SHORT = 'redirect_view'
@@ -29,26 +32,13 @@ SHORT_INVALID = 'Указано недопустимое имя для коро�
 NOT_FOUND = 'Указанный id не найден'
 RESOURCE_NOT_FOUND = 'Ресурс не найден'
 INTERNAL_ERROR = 'Внутренняя ошибка сервера'
-
+GENERATE_ERROR = (
+    'Не удалось сгенерировать уникальный short. Число попыток - {attempts}')
 # Ошибки форм
 REQUIRED_FIELD = 'Обязательное поле'
 INVALID_URL_FORM = 'Некорректный URL'
 ONLY_LATIN_AND_DIGITS = 'Только латинские буквы и цифры'
-
-
-def pluralize_symbols(n):
-    if 11 <= n % 100 <= 14:
-        return 'символов'
-    if n % 10 == 1:
-        return 'символ'
-    if 2 <= n % 10 <= 4:
-        return 'символа'
-    return 'символов'
-
-
-SHORT_MAX_LENGTH_ERROR = (
-    f'Не более {MAX_SHORT_LENGTH} {pluralize_symbols(MAX_SHORT_LENGTH)}'
-)
+SHORT_MAX_LENGTH_ERROR = f'Допустимо символов: не более {MAX_SHORT_LENGTH}'
 
 # Сообщения для загрузки файлов
 CHOOSE_FILES = 'Выберите хотя бы один файл'
@@ -57,6 +47,7 @@ NO_TOKEN = 'Токен Яндекс.Диска не задан'
 FILES_UPLOADED = 'Файлы успешно загружены'
 UPLOAD_LINK_ERROR = 'Ошибка получения ссылки для загрузки {filename}'
 UPLOAD_FILE_ERROR = 'Ошибка загрузки файла {filename}'
+LOCATION_HEADER_ERROR = 'Отсутствует заголовок Location'
 
 # Успешные сообщения
 SHORT_LINK_READY = 'Ваша короткая ссылка:'

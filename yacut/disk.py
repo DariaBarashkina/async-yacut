@@ -11,24 +11,31 @@ from yacut.constants import (
     UPLOAD_FILE_ERROR,
     YANDEX_UPLOAD_PATH,
     YANDEX_DOWNLOAD_PATH,
+    LOCATION_HEADER_ERROR,
+    HEADERS_AUTH_KEY,
+    HEADERS_AUTH_VALUE,
 )
 
-LOCATION_HEADER_ERROR = 'Отсутствует заголовок Location'
 
-
-def _get_headers():
+def _get_headers() -> dict:
+    """Формирует заголовки авторизации для Яндекс.Диска."""
     token = current_app.config.get('DISK_TOKEN')
+
     if not token:
         raise ValueError(NO_TOKEN)
-    return {'Authorization': f'OAuth {token}'}
+
+    return {
+        HEADERS_AUTH_KEY: HEADERS_AUTH_VALUE.format(token=token)
+    }
 
 
 async def async_upload_files_to_yadisk(files: Optional[List]) -> List[str]:
+    """Асинхронно загружает список файлов на Яндекс.Диск."""
     async with aiohttp.ClientSession() as session:
         return await asyncio.gather(
             *[
                 upload_file_and_get_url(session, file)
-                for file in files if file.filename
+                for file in files
             ]
         )
 
@@ -37,25 +44,25 @@ async def upload_file_and_get_url(
     session: aiohttp.ClientSession,
     file
 ) -> str:
-    headers = _get_headers()
+    """Загружает файл и возвращает короткую ссылку."""
     filename = file.filename
 
-    upload_url = await _get_upload_url(session, headers, filename)
+    upload_url = await _get_upload_url(session, filename)
     file_path = await _upload_file_content(session, upload_url, file)
 
-    return await _get_download_url(session, headers, file_path)
+    return await _get_download_url(session, file_path)
 
 
 async def _get_upload_url(
     session: aiohttp.ClientSession,
-    headers: dict,
     filename: str
 ) -> str:
+    """Получает URL для загрузки файла."""
     base = current_app.config['YANDEX_API_BASE']
 
     async with session.get(
         f"{base}{YANDEX_UPLOAD_PATH}",
-        headers=headers,
+        headers=_get_headers(),
         params={
             'path': f'app:/{filename}',    # noqa: E231
             'fields': 'href'
@@ -76,6 +83,7 @@ async def _upload_file_content(
     upload_url: str,
     file
 ) -> str:
+    """Отправляет файл на Яндекс.Диск."""
     async with session.put(upload_url, data=file.read()) as response:
         response.raise_for_status()
 
@@ -92,14 +100,14 @@ async def _upload_file_content(
 
 async def _get_download_url(
     session: aiohttp.ClientSession,
-    headers: dict,
     file_path: str
 ) -> str:
+    """Получает ссылку для скачивания файла."""
     base = current_app.config['YANDEX_API_BASE']
 
     async with session.get(
         f"{base}{YANDEX_DOWNLOAD_PATH}",
-        headers=headers,
+        headers=_get_headers(),
         params={
             'path': file_path,
             'fields': 'href'

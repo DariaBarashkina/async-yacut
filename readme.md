@@ -9,7 +9,6 @@ YaCut — это веб-сервис для сокращения длинных 
 
 ## Структура проекта
 ```text
-```text
 yacut/
 ├── run.py                         # точка входа в приложение
 ├── requirements.txt               # зависимости проекта
@@ -91,8 +90,8 @@ yacut/
 1. **Клонируйте репозиторий**
 
     ```bash
-    git clone git@github.com:your-username/yacut.git
-    cd yacut
+    git clone git@github.com:DariaBarashkina/async-yacut.git
+    cd async-yacut
     ```
 
 2. **Создайте и активируйте виртуальное окружение**
@@ -125,12 +124,14 @@ yacut/
     ```
 
 6. **Запустите сервер разработки**
-Откройте браузер и перейдите по адресу http://127.0.0.1:5000.
 
     ```bash
     flask run
     ```
+Откройте браузер и перейдите по [адресу](http://127.0.0.1:5000).
 
 ## Автор
-Daria Barashkina
-GitHub: @DariaBarashkina
+**Барашкина Дарья**
+
+- GitHub: [DariaBarashkina](https://github.com/DariaBarashkina)
+- Email: barashkinada@gmail.com

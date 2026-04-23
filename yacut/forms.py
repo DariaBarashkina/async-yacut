@@ -50,17 +50,7 @@ class URLMapForm(FlaskForm):
     submit = SubmitField(BTN_CREATE)
 
     def validate_custom_id(self, field):
-        """
-        Проверяет, что пользовательский short_id:
-        - не зарезервирован
-        - не занят в базе
-        """
-        if not field.data:
-            return
-
-        short = field.data
-
-        if short in RESERVED_SHORTS or URLMap.get(short):
+        if field.data in RESERVED_SHORTS or URLMap.get(field.data) is not None:
             raise ValidationError(SHORT_EXISTS)
 
 

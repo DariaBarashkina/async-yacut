@@ -6,11 +6,9 @@ from yacut import app
 from yacut.models import URLMap
 from yacut.error_handlers import InvalidAPIUsage
 from yacut.constants import (
-    MAX_SHORT_LENGTH,
     NOT_FOUND,
     EMPTY_BODY,
     URL_REQUIRED,
-    SHORT_INVALID,
 )
 
 
@@ -24,16 +22,12 @@ def create_short_link():
     if 'url' not in data or not data['url']:
         raise InvalidAPIUsage(URL_REQUIRED)
 
-    if 'custom_id' in data and data['custom_id']:
-        if len(data['custom_id']) > MAX_SHORT_LENGTH:
-            raise InvalidAPIUsage(SHORT_INVALID)
-
     try:
         url_map = URLMap.create(
             original=data['url'],
             short=data.get('custom_id')
         )
-    except Exception as error:
+    except (ValueError, RuntimeError) as error:
         raise InvalidAPIUsage(str(error))
 
     return jsonify({

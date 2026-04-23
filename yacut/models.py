@@ -16,10 +16,8 @@ from yacut.constants import (
     SHORT_INVALID,
     REDIRECT_FOR_SHORT,
     SHORT_REGEX_PATTERN,
+    GENERATE_ERROR,
 )
-
-
-GENERATE_ERROR = 'Не удалось сгенерировать уникальный short'
 
 
 class URLMap(db.Model):
@@ -42,29 +40,22 @@ class URLMap(db.Model):
 
     @staticmethod
     def create(original, short=None, commit=True, validate=True):
-        """
-        Создаёт запись в базе.
-        """
+        """Создаёт запись в базе."""
 
         if validate and len(original) > MAX_URL_LENGTH:
             raise ValueError(SHORT_INVALID)
 
+        short = short or URLMap._generate_unique_short()
+
         if short:
-
-            if validate and len(short) > MAX_SHORT_LENGTH:
+            if validate and (
+                len(short) > MAX_SHORT_LENGTH
+                or not re.fullmatch(SHORT_REGEX_PATTERN, short)
+            ):
                 raise ValueError(SHORT_INVALID)
 
-            if validate and not re.fullmatch(SHORT_REGEX_PATTERN, short):
-                raise ValueError(SHORT_INVALID)
-
-            if short in RESERVED_SHORTS:
+            if short in RESERVED_SHORTS or URLMap.get(short):
                 raise ValueError(SHORT_EXISTS)
-
-            if URLMap.get(short):
-                raise ValueError(SHORT_EXISTS)
-
-        else:
-            short = URLMap._generate_unique_short()
 
         url_map = URLMap(original=original, short=short)
         db.session.add(url_map)
@@ -82,16 +73,15 @@ class URLMap(db.Model):
                 random.choices(SHORT_ALLOWED_CHARS, k=SHORT_LENGTH)
             )
 
-            if short in RESERVED_SHORTS:
-                continue
-
-            if not URLMap.get(short):
+            if short not in RESERVED_SHORTS and not URLMap.get(short):
                 return short
 
-        raise RuntimeError(
-            f'{GENERATE_ERROR} за {MAX_GENERATION_ATTEMPTS} попыток'
-        )
+        raise RuntimeError(GENERATE_ERROR)
 
     def get_short_url(self):
         """Возвращает абсолютный URL короткой ссылки."""
-        return url_for(REDIRECT_FOR_SHORT, short=self.short, _external=True)
+        return url_for(
+            REDIRECT_FOR_SHORT,
+            short=self.short,
+            _external=True
+        )
