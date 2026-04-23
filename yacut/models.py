@@ -17,6 +17,7 @@ from yacut.constants import (
     REDIRECT_FOR_SHORT,
     SHORT_REGEX_PATTERN,
     GENERATE_ERROR,
+    URL_TOO_LONG,
 )
 
 
@@ -41,11 +42,8 @@ class URLMap(db.Model):
     @staticmethod
     def create(original, short=None, commit=True, validate=True):
         """Создаёт запись в базе."""
-
         if validate and len(original) > MAX_URL_LENGTH:
-            raise ValueError(SHORT_INVALID)
-
-        short = short or URLMap._generate_unique_short()
+            raise ValueError(URL_TOO_LONG)
 
         if short:
             if validate and (
@@ -53,9 +51,10 @@ class URLMap(db.Model):
                 or not re.fullmatch(SHORT_REGEX_PATTERN, short)
             ):
                 raise ValueError(SHORT_INVALID)
-
             if short in RESERVED_SHORTS or URLMap.get(short):
                 raise ValueError(SHORT_EXISTS)
+        else:
+            short = URLMap._generate_unique_short()
 
         url_map = URLMap(original=original, short=short)
         db.session.add(url_map)
@@ -72,10 +71,8 @@ class URLMap(db.Model):
             short = ''.join(
                 random.choices(SHORT_ALLOWED_CHARS, k=SHORT_LENGTH)
             )
-
             if short not in RESERVED_SHORTS and not URLMap.get(short):
                 return short
-
         raise RuntimeError(GENERATE_ERROR)
 
     def get_short_url(self):

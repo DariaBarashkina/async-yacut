@@ -17,9 +17,6 @@ RESERVED_SHORTS = {'files'}
 YANDEX_UPLOAD_PATH = '/disk/resources/upload'
 YANDEX_DOWNLOAD_PATH = '/disk/resources/download'
 
-HEADERS_AUTH_KEY = 'Authorization'
-HEADERS_AUTH_VALUE = 'OAuth {token}'
-
 # Имя эндпоинта для редиректа
 REDIRECT_FOR_SHORT = 'redirect_view'
 
@@ -27,13 +24,17 @@ REDIRECT_FOR_SHORT = 'redirect_view'
 EMPTY_BODY = 'Отсутствует тело запроса'
 URL_REQUIRED = '"url" является обязательным полем!'
 INVALID_URL = 'Указан недопустимый URL'
+URL_TOO_LONG = 'Длина URL превышает допустимую'
 SHORT_EXISTS = 'Предложенный вариант короткой ссылки уже существует.'
 SHORT_INVALID = 'Указано недопустимое имя для короткой ссылки'
 NOT_FOUND = 'Указанный id не найден'
 RESOURCE_NOT_FOUND = 'Ресурс не найден'
 INTERNAL_ERROR = 'Внутренняя ошибка сервера'
 GENERATE_ERROR = (
-    'Не удалось сгенерировать уникальный short. Число попыток - {attempts}')
+    'Не удалось сгенерировать уникальный short. '
+    'Число попыток - '
+    f'{MAX_GENERATION_ATTEMPTS}'
+)
 # Ошибки форм
 REQUIRED_FIELD = 'Обязательное поле'
 INVALID_URL_FORM = 'Некорректный URL'
