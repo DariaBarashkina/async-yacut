@@ -14,8 +14,11 @@ SHORT_REGEX_PATTERN = f'^[{SHORT_ALLOWED_CHARS}]+$'
 RESERVED_SHORTS = {'files'}
 
 # Яндекс.Диск
-YANDEX_UPLOAD_PATH = '/disk/resources/upload'
-YANDEX_DOWNLOAD_PATH = '/disk/resources/download'
+UPLOAD_URL = '{base}' + '/disk/resources/upload'
+DOWNLOAD_URL = '{base}' + '/disk/resources/download'
+HEADERS = {
+    'Authorization': 'OAuth {token}'
+}
 
 # Имя эндпоинта для редиректа
 REDIRECT_FOR_SHORT = 'redirect_view'

@@ -9,16 +9,19 @@ from flask import current_app
 from yacut.constants import (
     NO_TOKEN,
     UPLOAD_FILE_ERROR,
-    YANDEX_UPLOAD_PATH,
-    YANDEX_DOWNLOAD_PATH,
+    UPLOAD_URL,
+    DOWNLOAD_URL,
     LOCATION_HEADER_ERROR,
+    HEADERS,
 )
 
-# --- "константы модуля" ---
-UPLOAD_URL = "{base}" + YANDEX_UPLOAD_PATH
-DOWNLOAD_URL = "{base}" + YANDEX_DOWNLOAD_PATH
-AUTH_HEADER = 'Authorization'
-AUTH_HEADER_VALUE = 'OAuth {token}'
+
+def _build_headers(token: str) -> dict:
+    """Подставляет токен в заголовки."""
+    return {
+        key: value.format(token=token)
+        for key, value in HEADERS.items()
+    }
 
 
 async def async_upload_files_to_yadisk(files: Optional[List]) -> List[str]:
@@ -43,10 +46,7 @@ async def upload_file_and_get_url(
         raise ValueError(NO_TOKEN)
 
     filename = file.filename
-
-    headers = {
-        AUTH_HEADER: AUTH_HEADER_VALUE.format(token=token)
-    }
+    headers = _build_headers(token)
 
     base = current_app.config['YANDEX_API_BASE']
 
