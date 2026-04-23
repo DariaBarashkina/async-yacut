@@ -134,4 +134,4 @@ yacut/
 **Барашкина Дарья**
 
 - GitHub: [DariaBarashkina](https://github.com/DariaBarashkina)
-- Email: [[mailto:barashkinada@gmail.com|barashkinada@gmail.com]]
+- Email: [barashkinada@gmail.com](mailto:barashkinada@gmail.com)
